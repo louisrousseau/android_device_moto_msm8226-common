@@ -75,6 +75,12 @@ TARGET_QCOM_MEDIA_VARIANT := caf-bfam
 # Kernel handles input boosting
 TARGET_POWERHAL_NO_TOUCH_BOOST := true
 
+# Use qcom power hal
+TARGET_POWERHAL_VARIANT := qcom
+
+# Hardware tunables framework
+BOARD_HARDWARE_CLASS := device/motorola/msm8226-common/cmhw/
+
 # Assert
 TARGET_OTA_ASSERT_DEVICE := xt1031,xt1032,xt1033,xt1034,falcon_umts,falcon_umtsds,falcon_cdma,falcon_retuaws,falcon,falcon_gpe
 
