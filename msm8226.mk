@@ -87,7 +87,8 @@ PRODUCT_PACKAGES += \
     init.qcom.wifi.sh
 
 # TWRP
-PRODUCT_COPY_FILES += \
+# TODO: Should be in falcon and peregrine, respectively?
+#PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/etc/twrp.fstab:recovery/root/etc/twrp.fstab
 
 # Audio configuration
