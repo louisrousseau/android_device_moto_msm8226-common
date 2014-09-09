@@ -1,32 +1,110 @@
-# Copyright (C) 2013 The CyanogenMod Project
+#
+# Copyright (C) 2014 The CyanogenMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-LOCAL_PATH := device/motorola/msm8226-common
+$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+
+$(call inherit-product, vendor/motorola/msm8226-common/msm8226-common-vendor.mk)
+
+# Overlay
+DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
 # Permissions
 PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml
+    frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
+    frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
+    frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
+    frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
+    frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
+    frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
+    frameworks/native/data/etc/android.hardware.sensor.compass.xml:system/etc/permissions/android.hardware.sensor.compass.xml \
+    frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml \
+    frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
+    frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
+    frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
+    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
+    frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
+    frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
+    frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
+    frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
+    frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
+    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
+    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
 
-## overlays
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+# System Properties
+-include $(LOCAL_PATH)/system_prop.mk
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.sys.usb.config=mtp
+
+# Screen density
+PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
+PRODUCT_AAPT_PREF_CONFIG := xhdpi
+
+# Boot animation
+TARGET_SCREEN_HEIGHT := 1280
+TARGET_SCREEN_WIDTH := 720
+
+$(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 
 # Audio
 PRODUCT_PACKAGES += \
-    audio_policy.msm8226 \
-    libaudioparameter \
+    audiod \
+    audio.a2dp.default \
+    audio.primary.msm8226 \
+    audio.r_submix.default \
+    audio.usb.default \
+    audio_policy.msm8226
+
+PRODUCT_PACKAGES += \
+    libaudio-resampler \
+    libqcompostprocbundle \
     libqcomvisualizer \
-    libqcomvoiceprocessing
+    libqcomvoiceprocessing \
+    tinymix
+
+# Audio configuration
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/audio_effects.conf:system/vendor/etc/audio_effects.conf \
+    $(LOCAL_PATH)/configs/audio_platform_info.xml:system/etc/audio_platform_info.xml \
+    $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf \
+    $(LOCAL_PATH)/configs/mixer_paths.xml:system/etc/mixer_paths.xml
+
+# Camera
+PRODUCT_PACKAGES += \
+    libxml2
+
+# Charger
+PRODUCT_PACKAGES += \
+    charger \
+    charger_res_images
+
+# CRDA
+PRODUCT_PACKAGES += \
+    crda \
+    linville.key.pub.pem \
+    regdbdump \
+    regulatory.bin
+
+# Display
+PRODUCT_PACKAGES += \
+    copybit.msm8226 \
+    gralloc.msm8226 \
+    hwcomposer.msm8226 \
+    memtrack.msm8226 \
+    liboverlay
 
 # Ebtables
 PRODUCT_PACKAGES += \
@@ -34,155 +112,142 @@ PRODUCT_PACKAGES += \
     ethertypes \
     libebtc
 
-# HAL
+# Filesystem
 PRODUCT_PACKAGES += \
-    copybit.msm8226\
-    gps.msm8226 \
-    gralloc.msm8226 \
-    hwcomposer.msm8226 \
-    keystore.msm8226 \
-    lights.MSM8226 \
-    memtrack.msm8226 \
+    e2fsck \
+    fibmap.f2fs \
+    fsck.f2fs \
+    make_ext4fs \
+    mkfs.f2fs \
+    resize2fs \
+    setup_fs
+
+# FM
+PRODUCT_PACKAGES += \
+    FM2 \
+    FMRecord \
+    libqcomfm_jni \
+    qcom.fmradio
+
+# GPS
+PRODUCT_PACKAGES += \
+    gps.msm8226
+
+# IRSC
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config
+
+# Keystore
+PRODUCT_PACKAGES += \
+    keystore.msm8226
+
+# Lights
+PRODUCT_PACKAGES += \
+    lights.msm8226
+
+# Media
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
+    $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
+
+# Motorola
+PRODUCT_PACKAGES += \
+    aplogd \
+    charge_only_mode
+
+# OMX
+PRODUCT_PACKAGES += \
+    libc2dcolorconvert \
+    libdashplayer \
+    libdivxdrmdecrypt \
+    libOmxAacEnc \
+    libOmxAmrEnc \
+    libOmxCore \
+    libOmxEvrcEnc \
+    libOmxQcelp13Enc \
+    libOmxVdec \
+    libOmxVdecHevc \
+    libOmxVenc \
+    libstagefrighthw \
+    qcmediaplayer
+
+PRODUCT_BOOT_JARS += \
+    qcmediaplayer
+
+# Power
+PRODUCT_PACKAGES += \
     power.msm8226
 
 # QRNG
-PRODUCT_PACKAGES += qrngp
-
-# Utilities
 PRODUCT_PACKAGES += \
-    charge_only_mode \
-    mkfs.f2fs \
-    fsck.f2fs \
-    fibmap.f2fs \
-    wcnss_service
-
-# Wifi
-PRODUCT_COPY_FILES += \
-    kernel/motorola/msm8226/drivers/net/wireless/prima/firmware_bin/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
-    kernel/motorola/msm8226/drivers/net/wireless/prima/firmware_bin/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
-    $(LOCAL_PATH)/config/WCNSS_qcom_wlan_nv.bin:system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
-
-# Symlinks
-PRODUCT_PACKAGES += WCNSS_qcom_wlan_factory_nv.bin
+    qrngd \
+    qrngp
 
 # Ramdisk
 PRODUCT_PACKAGES += \
+    init.crda.sh \
+    init.qcom.bt.sh \
+    init.qcom.coex.sh \
+    init.qcom.efs.sync.sh \
+    init.qcom.fm.sh \
+    init.qcom.mdm_links.sh \
+    init.qcom.modem_links.sh \
+    init.qcom.post_boot.sh \
+    init.qcom.thermal_conf.sh \
+    init.qcom.wifi.sh \
+    moto_com.sh \
+    mount_pds.sh
+
+PRODUCT_PACKAGES += \
     bbx \
-    fstab.qcom \
     gpecheck.sh \
-    gpe-fstab.qcom \
+    init.class_main.sh \
+    init.mmi.boot.sh \
+    init.mmi.rc \
+    init.mmi.touch.sh \
+    init.qcom.class_core.sh \
+    init.qcom.early_boot.sh \
     init.qcom.rc \
+    init.qcom.sh \
+    init.qcom.ssr.sh \
+    init.qcom.syspart_fixup.sh \
+    init.qcom.usb.rc \
+    init.qcom.usb.sh \
+    init.recovery.qcom.rc \
     init.target.rc \
     ueventd.qcom.rc
 
-# Init scripts
+# Thermal
 PRODUCT_PACKAGES += \
-    init.mmi.boot.sh \
-    init.mmi.radio.sh \
-    init.mmi.rc \
-    init.mmi.touch.sh \
-    init.qcom.post_boot.sh \
-    init.qcom.sh \
-    init.qcom.ssr.sh \
-    init.qcom.wifi.sh
+    thermal-engine-8226.conf
 
-# TWRP
-# TODO: Should be in falcon and peregrine, respectively?
-#PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/etc/twrp.fstab:recovery/root/etc/twrp.fstab
+# Torch
+PRODUCT_PACKAGES += \
+    Torch
 
-# Audio configuration
+# USB
+PRODUCT_PACKAGES += \
+    com.android.future.usb.accessory
+
+# Wifi
+PRODUCT_PACKAGES += \
+    hostapd.accept \
+    hostapd.deny \
+    hostapd_default.conf
+
+PRODUCT_PACKAGES += \
+    p2p_supplicant_overlay.conf \
+    wpa_supplicant_overlay.conf
+
+PRODUCT_PACKAGES += \
+    WCNSS_qcom_wlan_factory_nv.bin
+
+PRODUCT_PACKAGES += \
+    libcurl \
+    libqsap_sdk \
+    libQWiFiSoftApCfg \
+    wcnss_service
+
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/audio_policy.conf:system/etc/audio_policy.conf \
-    $(LOCAL_PATH)/config/audio_effects.conf:system/vendor/etc/audio_effects.conf \
-    $(LOCAL_PATH)/config/mixer_paths.xml:system/etc/mixer_paths.xml
-
-# Charger - moto uses a funky ro.bootmode=mot-charger
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/moto_com.sh:system/bin/moto_com.sh
-
-# EGL config
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/egl.cfg:system/lib/egl/egl.cfg
-
-# Sap/location secuity configuration file
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/sap.conf:system/etc/sap.conf \
-    $(LOCAL_PATH)/config/sec_config:system/etc/sec_config
-
-# Media config
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/media_profiles.xml:system/etc/media_profiles.xml \
-    $(LOCAL_PATH)/config/media_codecs.xml:system/etc/media_codecs.xml
-
-# QCOM Display
-PRODUCT_PROPERTY_OVERRIDES += \
-    debug.sf.fb_always_on=1 \
-    ro.hdmi.enable=true
-
-# Media
-PRODUCT_PROPERTY_OVERRIDES += \
-    media.stagefright.enable-player=true \
-    media.stagefright.enable-http=true \
-    media.stagefright.enable-aac=true \
-    media.stagefright.enable-qcp=true \
-    media.stagefright.enable-fma2dp=true \
-    media.stagefright.enable-scan=true \
-    mmp.enable.3g2=true \
-    ro.audio.fm_max_volume=4096 \
-    ro.qualcomm.cabl=0 \
-    use.voice.path.for.pcm.voip=true \
-    qcom.bt.le_dev_pwr_class=1 \
-    ro.qc.sdk.audio.ssr=false \
-    persist.audio.fluence.voicecall=true \
-    persist.audio.fluence.voicerec=false \
-    ro.qc.sdk.audio.fluencetype=fluence \
-    persist.audio.fluence.speaker=true \
-    use.voice.path.for.pcm.voip=true \
-    use.dedicated.device.for.voip=true \
-    audio.offload.buffer.size.kb=32 \
-    audio.offload.gapless.enabled=true \
-    av.offload.enable=true \
-    mm.enable.smoothstreaming=true \
-    qcom.hw.aac.encoder=true
-
-# Misc
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.usb.mtp=0x2e82 \
-    ro.usb.mtp_adb=0x2e76 \
-    ro.usb.ptp=0x2e83 \
-    ro.usb.ptp_adb=0x2e84 \
-    ro.usb.bpt=0x2e28 \
-    ro.usb.bpt_adb=0x2e29 \
-    ro.usb.bpteth=0x2e2a \
-    ro.usb.bpteth_adb=0x2e2b \
-    persist.gps.qc_nlp_in_use=0 \
-    persist.fuse_sdcard=true \
-    ro.crypto.fuse_sdcard=true \
-    ro.nfc.port=I2C \
-    ro.cwm.forbid_format="/fsg,/firmware,/persist,/boot"
-
-# Radio
-PRODUCT_PROPERTY_OVERRIDES += \
-    rild.libpath=/system/vendor/lib/libril-qc-qmi-1.so \
-    persist.radio.msgtunnel.start=false \
-    persist.sys.ssr.restart_level=3 \
-    persist.sys.qc.sub.rdump.on=1 \
-    ro.telephony.default_network=7 \
-    telephony.lteOnCdmaDevice=0 \
-    persist.radio.no_wait_for_card=1 \
-    persist.radio.dfr_mode_set=1
-
-# Opengles version 3
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=196608
-
-# QCOM Display
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sf.lcd_density=320
-
-# QC Perf
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.extension_library=/system/vendor/lib/libqc-opt.so
-
-$(call inherit-product, device/motorola/qcom-common/qcom-common.mk)
+    kernel/motorola/msm8226/drivers/staging/prima/firmware_bin/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
+    kernel/motorola/msm8226/drivers/staging/prima/firmware_bin/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini
