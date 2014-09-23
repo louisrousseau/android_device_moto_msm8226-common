@@ -152,8 +152,8 @@ PRODUCT_COPY_FILES += \
 
 # Motorola
 PRODUCT_PACKAGES += \
-    aplogd \
-    charge_only_mode
+   charge_only_mode
+#    aplogd \
 
 # OMX
 PRODUCT_PACKAGES += \
