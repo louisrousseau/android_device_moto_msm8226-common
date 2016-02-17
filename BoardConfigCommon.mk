@@ -16,11 +16,11 @@
 # inherit from the proprietary version
 -include vendor/motorola/msm8226-common/BoardConfigVendor.mk
 
-LOCAL_PATH := device/motorola/msm8226-common
+LOCAL_PATH := device/moto/msm8226-common
 
 BOARD_VENDOR := motorola-qcom
 
-TARGET_SPECIFIC_HEADER_PATH := device/motorola/msm8226-common/include
+TARGET_SPECIFIC_HEADER_PATH := device/moto/msm8226-common/include
 
 # Platform
 TARGET_BOARD_PLATFORM := msm8226
