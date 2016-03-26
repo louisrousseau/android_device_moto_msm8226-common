@@ -22,6 +22,9 @@ BOARD_VENDOR := motorola-qcom
 
 TARGET_SPECIFIC_HEADER_PATH := device/moto/msm8226-common/include
 
+# See https://github.com/omnirom/android_system_core/commit/651fae3cbc9183ea1abcccc9b64db49ff76d0e00
+TARGET_INCREASES_COLDBOOT_TIMEOUT := true
+
 # Platform
 TARGET_BOARD_PLATFORM := msm8226
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno305
