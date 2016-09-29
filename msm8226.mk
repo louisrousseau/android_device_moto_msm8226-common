@@ -199,8 +199,6 @@ PRODUCT_PACKAGES += \
     mount_pds.sh
 
 PRODUCT_PACKAGES += \
-    bbx \
-    gpecheck.sh \
     init.class_main.sh \
     init.mmi.boot.sh \
     init.mmi.rc \
