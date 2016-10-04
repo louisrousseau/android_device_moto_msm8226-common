@@ -13,7 +13,7 @@ LOCAL_SRC_FILES += \
     draw.c \
     screen.c
 
-LOCAL_STATIC_LIBRARIES := libunz libcutils liblog
+LOCAL_STATIC_LIBRARIES := libz libcutils liblog
 
 LOCAL_C_INCLUDES := external/zlib
 
